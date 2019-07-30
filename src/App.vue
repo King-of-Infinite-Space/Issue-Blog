@@ -12,34 +12,46 @@
     </div>
     <div class="layout" id="main-container">
       <div id="archives">
-        <Archives :milestones="archives" v-on:openArchiveWindow="openArchiveWindow"/>
+        <Archives :milestones="archives" :imgs="imgs" v-on:openArchiveWindow="openArchiveWindow"/>
+        <!--
         <div class="ls-hidden hot-articles">
           <Hot :hotPosts="hotPosts" v-on:readPost="readPost"/>
         </div>
+        -->
       </div>
       <div id="post-container">
         <Post :posts="posts" :loading="loadingPost" :noMore="noMore"
           v-on:readPost="readPost"
           v-on:loadMorePosts="loadPosts"/>
       </div>
+      <!--
       <div class="xs-hidden hot-articles">
         <Hot :hotPosts="hotPosts" v-on:readPost="readPost"/>
       </div>
+      -->
       <div id="return-top" @click="returnTop"></div>
     </div>
-    <ArchiveDetail v-if="showArchive" :archive="showingArchive"
+    <transition name="popupPage">
+      <PostDetail v-if="showPost" :post="showingPost" :imgs="imgs" v-on:closePostWindow="closePostWindow"/>
+    </transition>
+    <transition name="popupPage">
+      <ArchiveDetail v-if="showArchive" :archive="showingArchive" :imgs="imgs"
       v-on:closeArchiveWindow="closeArchiveWindow"
       v-on:readPost="readPost"/>
-    <PostDetail v-if="showPost" :post="showingPost"
-      v-on:closePostWindow="closePostWindow"/>
+    </transition>
     <div id="footer">
       <div class="layout" id="footer-content">
+        <div id="repo-link">
+          <a href="https://github.com/King-of-Infinite-Space/thoughts/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc" target="_blank">View in Github</a>
+        </div>
         <div class="footer-info">
-          Theme by <a href="https://github.com/Yidadaa/issue-blog">ISSUE-BLOG</a>.
+          Powered by <a href="https://github.com/Yidadaa/issue-blog" target="_blank">issue-blog</a>
         </div>
         <div class="footer-links">
+          <!--
           <span>友情链接:</span>
           <a :href="link[1]" v-for="(link, index) in friendLinks" :key="index">{{link[0]}}</a>
+          -->
         </div>
       </div>
       <div id="footer-wrap"></div>
@@ -96,6 +108,19 @@ export default {
 
       showPost: false, // 查看文章内容
       showingPost: {}, // 文章详情
+      imgs: { // 图床 sm.ms, imgurl.org
+        '赛博空间': 'https://i.loli.net/2019/07/24/5d380588cec5c77214.jpg',
+        '绿茵故事': 'https://i.loli.net/2019/07/24/5d380f266eb3322085.jpg',
+        '时光碎片': 'https://i.loli.net/2019/07/24/5d3834147841879201.jpg',
+        '撷叶拾英': 'https://i.loli.net/2019/07/26/5d3ae6116360c39035.jpg',
+        '言不及义': 'https://i.loli.net/2019/07/26/5d3aec2a667dc93355.jpg',
+        '好行小慧': 'https://i.loli.net/2019/07/26/5d3af278f122a30361.jpg',
+        '有文无类': 'https://i.loli.net/2019/07/26/5d3aec2ac857124936.jpg',
+        '外置记忆': 'https://b2.bmp.ovh/imgs/2019/07/203eac5466049979.jpg',
+        '雕虫小技': 'https://i.loli.net/2019/07/26/5d3af8a4806a030021.jpg',
+        '陋词拙句': 'https://i.loli.net/2019/07/28/5d3d79b74671448737.jpg',
+        '今是何世': 'https://b2.bmp.ovh/imgs/2019/07/2ff2c89d17dda061.jpg'
+      }
     }
   },
   computed: {
@@ -118,7 +143,7 @@ export default {
       if (this.noMore) return // 没有更多内容了
 
       this.loadingPost = true
-      fetch(url.query({ page: this.curPage })).then(res => res.json()).then(res => {
+      fetch(url.query({ page: this.curPage, sort: 'updated' })).then(res => res.json()).then(res => {
         const posts = res.map(post => {
           const reg = /!\[.*\]\((.*)\)/
           const match = post.body.match(reg) // 找出文中第一张图
@@ -182,14 +207,24 @@ export default {
       const hash = location.hash.replace('#/', '')
       if (!hash) return
       const hashInfo = hash.split('/')
+      /*
+      let re = /\?code=\w+/
+      let match = location.href.match(re)
+      if (match) {
+        // location.href = location.href.replace(re, '') + match[0]
+        location.hash += match[0]
+      }
+      */
       if (hashInfo[0] === 'post') {
         this.loadSinglePost(hashInfo[1]).then(res => res.title && this.readPost(res))
       }
     },
     loadSinglePost (number) {
       // 加载指定post
-      const url = urls.issue.url
-      return fetch(`${url}/${number}`).then(res => res.json())
+      let url = window.authToken
+        ? `${urls.issue.template}/${number}?access_token=${window.authToken}`
+        : `${urls.issue.url}/${number}`
+      return fetch(url).then(res => res.json())
     },
     returnTop () {
       window.scrollTo(0, 0)
@@ -199,7 +234,7 @@ export default {
     this.onLoaded() // 判断是否需要加载指定post
     this.loadPosts(0)
     this.loadArchives()
-    this.loadHotPosts()
+    // this.loadHotPosts()
   },
   components: {
     Post, Archives, Hot, ArchiveDetail, PostDetail
@@ -219,11 +254,10 @@ export default {
     padding: 0 20px;
   }
   #banner {
-    height: 250px;
+    height: 100px;
   }
   #motto {
-    font-size: 60px;
-    margin-bottom: -25px;
+    font-size: 2rem;
     font-weight: lighter;
   }
   #archives {
@@ -240,50 +274,41 @@ export default {
   .ls-hidden {
     display: none;
   }
-  #footer-content {
-    justify-content: center;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    font-size: 0.8rem;
-  }
 }
-@media screen and (max-width: 1200px){
+@media screen and (min-width: 768px) and (max-width: 1200px){
   /*平板屏幕 >768px <992x*/
   .layout {
-    width: 100%!important;
+    width: 80%!important;
   }
+
 }
 @media screen and (min-width: 768px){
   /*大屏幕 >992px*/
   .layout {
-    width: 60%;
+    width: 65%;
   }
   #banner {
-    height: 400px;;
+    height: 120px;;
   }
   #motto {
-    font-size: 100px;
+    font-size: 3rem;
   }
   #archives {
-    min-width: 300px;
-    width: 39%;
+    /*min-width: 300px;
+    width: 30%;*/
     padding: 10px;
+    width: 40%;;
   }
   #main-container {
     flex-direction: row-reverse;
     flex-wrap: nowrap;
   }
   #post-container {
-    flex-grow: 1;
     width: 70%;
     padding-top: 10px;
   }
   .xs-hidden {
     display: none;
-  }
-  #footer-content {
-    justify-content: space-between;
-    margin: 20px auto;
   }
 }
 
@@ -292,6 +317,7 @@ export default {
   width: 100%;
   height: 40px;
   background-color: rgba(0, 0, 0, 0.2);
+  display: none;
 }
 #links {
   line-height: 40px;
@@ -332,12 +358,13 @@ export default {
 }
 
 #banner {
-  background-image: url("//hbfile.b0.upaiyun.com/img/home/banner/298258a2967dbfcf3cdc4fdcc6daa472ce1c2e2bd35d6");
+  background-image: url("https://i.loli.net/2019/07/30/5d401851275c882243.jpg");
   background-size: cover;
-  background-position-x: center;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
 }
 
 #motto {
@@ -365,7 +392,7 @@ export default {
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2) inset;
+  max-height: 60px;
 }
 
 #footer-wrap {
@@ -374,11 +401,13 @@ export default {
   position: absolute;
   top: 0;
   z-index: -1;
-  background-image: url("//hbfile.b0.upaiyun.com/img/home/banner/298258a2967dbfcf3cdc4fdcc6daa472ce1c2e2bd35d6");
-  background-size: 150% 150%;
-  background-position-x: center;
   box-sizing: border-box;
-  filter: blur(20px) brightness(70%);
+  /*
+  filter: blur(20px) brightness(70%);*/
+  background-image: url("https://i.loli.net/2019/07/30/5d401851275c882243.jpg");
+  background-size: cover;
+  background-position-y: bottom;
+  background-position-x: center;
 }
 
 #footer-content {
@@ -387,6 +416,7 @@ export default {
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
   padding: 20px;
   line-height: 1.5;
+  justify-content: space-between;
 }
 .footer-links {
   margin-left: 10px;
@@ -397,6 +427,9 @@ export default {
 .footer-links a {
   color: #fff;
   margin-right: 5px;
+}
+#repo-link a {
+  color: #fff;
 }
 #return-top {
   position: fixed;
@@ -419,5 +452,13 @@ export default {
 
 .show-top-btn {
   transform: translateY(0)!important;
+}
+
+.popupPage-enter-active {
+  animation: window-in 0.4s ease-in-out;
+}
+
+.popupPage-leave-active {
+  animation: window-in 0.4s ease-in-out reverse;
 }
 </style>

@@ -3,6 +3,7 @@
     <div class="post" v-for="(post, index) in posts"
       :key="post.id" v-bind:data-index="index"
       @click="readPost(post)">
+    <!--
     <div class="post-header">
         <span class="user-img">
         <img v-bind:src="post.user.avatar_url">
@@ -10,6 +11,7 @@
         <span class="user-name">{{post.user.login}}</span>
         <span class="post-time">{{new Date(post.created_at).toLocaleDateString().replace(/\//g, '-')}}</span>
     </div>
+    -->
     <div class="post-content-wrap">
         <div class="post-content">
         <div class="post-title">
@@ -22,15 +24,20 @@
         </div>
     </div>
     <div class="post-footer">
+        <!--
         <span class="icon-folder-open post-icon" v-if="post.milestone">
           # {{post.milestone.title}} #
         </span>
+        -->
         <span class="icon-price-tags post-icon" v-if="post.labels.length"></span>
         <span class="post-tags">
             <span class="post-tag" v-for="label in post.labels" v-bind:key="label.id">{{label.name}}</span>
         </span>
-        <span class="post-comments icon-bubbles3">
-            {{` ${post.comments} 条评论`}}
+        <span class="post-info">
+          <span class="post-time">{{new Date(post.created_at).toLocaleDateString().replace(/\//g, '-')}}发布</span>
+          <span class="update-time" v-if="!(post.updated_at===post.created_at)">&nbsp;{{new Date(post.updated_at).toLocaleDateString().replace(/\//g, '-')}}更新</span>
+          <span class="post-comments icon-bubbles3">&nbsp;评论{{post.comments}}
+          </span>
         </span>
     </div>
     </div>
@@ -67,7 +74,7 @@ export default {
   color: #aaa;
   cursor: pointer;
 }
-
+/*
 .post-header {
   margin-bottom: 10px;
   display: flex;
@@ -77,11 +84,12 @@ export default {
   padding-bottom: 10px;
   color: #999;
   align-items: center;
+  display: none;
 }
-
+*/
 .post-footer {
   margin-top: 10px;
-  border-top: 1px dotted #eee;
+  border-top: 1px solid #eee;
   padding-top: 10px;
   font-size: 12px;
   color: #999;
@@ -168,9 +176,9 @@ export default {
   text-align: left;
   margin-top: 0px;
   background-color: #fff;
-  padding: 15px;
-  padding-bottom: 10px;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+  padding: 15px 15px 10px 20px;
+  margin-bottom: 3px;
+  box-shadow: -5px 5px 50px rgba(0, 0, 0, 0.12);
   cursor: pointer;
 }
 
@@ -192,7 +200,7 @@ export default {
   margin-bottom: 5px;
 }
 
-.post-comments {
+.post-info {
   float: right;
 }
 </style>

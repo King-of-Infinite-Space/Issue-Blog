@@ -9,7 +9,7 @@ const rootPath = `${hostname}/repos/${username}/${reponame}/`
 let urls = {
   issue: `${rootPath}issues`,
   comment: `${rootPath}issues/{number}/comments`,
-  milestones: `${rootPath}milestones`,
+  milestones: `${rootPath}labels`, // changed to labels
   msPost: `${rootPath}issues?milestone={number}`,
   oAuth: `https://github.com/login/oauth/authorize?client_id=${clientID}&client_secret=${clientSecret}&redirect_uri={url}&scope=public_repo`,
   newComment: `https://github.com/${username}/${reponame}/issues/{number}#new_comment_field`

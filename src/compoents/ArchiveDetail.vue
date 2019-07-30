@@ -1,12 +1,14 @@
 <template>
   <div id="archive-window">
     <div id="archive-container">
-      <div id="archive-close-btn" @click="close()"></div>
+      <div id="archive-close-btn" @click="close()">×</div>
       <div id="ar-content" v-if="archive">
-        <div id="ar-info">
+        <div id="ar-info" v-bind:style="style(archive.name)">
           <div id="ar-wrap">
-            <div id="ar-title"># {{archive.title}} #</div>
+            <div id="ar-title">{{archive.name}}</div>
+            <!--
             <div id="ar-desc">{{archive.description}}</div>
+            -->
           </div>
         </div>
         <div id="ar-list">
@@ -21,7 +23,7 @@
 import {urls} from '../config'
 import Post from './Post.vue'
 export default {
-  props: ['archive'],
+  props: ['archive', 'imgs'],
   data () {
     return {
       posts: [],
@@ -30,7 +32,7 @@ export default {
   },
   created () {
     this.loading = true
-    fetch(urls.issue.query({ milestone: this.archive.number })).then(res => res.json()).then(res => {
+    fetch(urls.issue.query({ labels: this.archive.name })).then(res => res.json()).then(res => {
       this.posts = res
       this.loading = false
     })
@@ -41,7 +43,11 @@ export default {
     },
     read (post) {
       this.$emit('readPost', post)
-    }
+    },
+    style (name) {
+      // return {backgroundImage: `url('../imgs/${name}.jpg')`}
+      return {backgroundImage: `url(${this.imgs[name]})`}
+    },
   },
   components: {
     Post
@@ -53,7 +59,7 @@ export default {
 
 @media screen and (max-width: 768px){
   #ar-info {
-    height: 30%;
+    height: 20%;
     width: 100%;
   }
   #ar-content {
@@ -64,20 +70,20 @@ export default {
     width: 100%;
   }
   #ar-list {
-    height: 70%;
+    height: 80%;
   }
 }
 @media screen and (min-width: 768px){
   #ar-info {
     height: 100%;
-    min-width: 30%;
+    min-width: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   #archive-container {
-    height: 80%;
-    width: 80%;
+    height: 100%;
+    width: 75%;
   }
   #ar-list {
     height: 100%;
@@ -95,40 +101,25 @@ export default {
 }
 #archive-container {
   background-color: #fff;
-  box-shadow: 0 50px 200px rgba(0, 0, 0, 0.2);
-  animation: window-in 0.45s ease-in-out;
+  box-shadow: 0 50px 100px 100px rgba(0, 0, 0, 0.2);
   position: relative;
 }
 #archive-close-btn {
-  height: 31px;
-  width: 31px;
   position: absolute;
   right: 0;
   top: 0;
-  transform: rotate(45deg);
+  width: 30px;
+  height: 30px;
+  font-size: 30px;
   transition: all ease 0.3s;
-  margin: 20px;
+  margin: 3px;
   cursor: pointer;
+  z-index:2;
 }
 #archive-close-btn:hover {
-  transform: rotate(45deg) scale(2);
+  transform: scale(1.5);
 }
-#archive-close-btn:before,
-#archive-close-btn:after {
-  content: ' ';
-  display: block;
-  background-color: #000;
-}
-#archive-close-btn:before {
-  height: 100%;
-  width: 1px;
-  transform: translateX(15px);
-}
-#archive-close-btn:after {
-  height: 1px;
-  width: 100%;
-  transform: translateY(-16px);
-}
+
 #ar-content {
   display: flex;
   height: 100%;
@@ -137,11 +128,11 @@ export default {
   background-color: #eee;
   padding: 20px 15px;
   box-sizing: border-box;
-  background-image: url("//hbfile.b0.upaiyun.com/img/home/banner/8e4250cfdc09ada434ee58540106c49070bd6ac6d551f");
   background-size: cover;
+  background-position: center;
 }
 #ar-title {
-  font-size: 26px;
+  font-size: 1.5rem;
   margin-bottom: 10px;
 }
 #ar-list {
