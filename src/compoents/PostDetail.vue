@@ -233,6 +233,7 @@ export default {
   margin: 3px;
   cursor: pointer;
   z-index:2;
+  text-shadow: 0px 0px 3px #fff;
 }
 #pd-close-btn:hover {
   transform: scale(1.5);
@@ -373,7 +374,7 @@ export default {
   display: inline-block;
   background-color: #eee;
   margin-bottom: 5px;
-  font-size: 0.9em
+  font-size: 0.8em
 }
 
 .p-time {
