@@ -10,11 +10,11 @@
             <div id="pd-desc"># {{post.milestone && post.milestone.title}} #</div>
             -->
             <span class="post-tags">
-              <span class="post-tag" v-for="label in post.labels" v-bind:key="label.id">{{label.name}}</span>
+              <span class="p-tag" v-for="label in post.labels" v-bind:key="label.id">{{label.name}}</span>
             </span>
-            <div class="creat-time post-time">发布于{{new Date(post.created_at).toLocaleDateString().replace(/\//g, '-')}}</div>
+            <div class="creat-time p-time">发布于{{new Date(post.created_at).toLocaleDateString().replace(/\//g, '-')}}</div>
             <span>&nbsp;&nbsp;</span>
-            <div class="update-time post-time">更新于{{new Date(post.updated_at).toLocaleDateString().replace(/\//g, '-')}}</div>
+            <div class="update-time p-time">更新于{{new Date(post.updated_at).toLocaleDateString().replace(/\//g, '-')}}</div>
           </div>
         </div>
         <div id="pd-right">
@@ -79,7 +79,7 @@ export default {
   computed: {
     content () {
       return this.post && this.post.body &&
-        this.processMath(marked(this.post.body))
+        this.processMath(marked(this.post.body, {breaks: true}))
     },
     reverse () {
       return this.post.milestone !== null && this.post.milestone.title === '累积'
@@ -366,7 +366,7 @@ export default {
   color: #aaa;
 }
 
-.post-tag {
+.p-tag {
   border-radius: 10px;
   padding: 0px 10px;
   margin-right: 5px;
@@ -376,7 +376,7 @@ export default {
   font-size: 0.9em
 }
 
-.post-time {
+.p-time {
   display: inline-block;
   font-size: 0.85em
 }

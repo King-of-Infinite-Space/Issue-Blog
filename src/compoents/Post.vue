@@ -137,12 +137,6 @@ export default {
   margin-left: 5px;
 }
 
-.post-time {
-  margin-left: 5px;
-  flex-grow: 1;
-  text-align: right;
-}
-
 .post-enter-active,
 .post-leave-active {
   transition: all 0.55s;
