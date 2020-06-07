@@ -172,7 +172,7 @@ export default {
   background-color: #fff;
   padding: 15px 15px 10px 20px;
   margin-bottom: 3px;
-  box-shadow: -5px 5px 50px rgba(0, 0, 0, 0.12);
+  box-shadow: -5px 5px 18px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 
