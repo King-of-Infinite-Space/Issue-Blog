@@ -221,10 +221,13 @@ export default {
     },
     loadSinglePost (number) {
       // 加载指定post
-      let url = window.authToken
-        ? `${urls.issue.template}/${number}?access_token=${window.authToken}`
-        : `${urls.issue.url}/${number}`
-      return fetch(url).then(res => res.json())
+      let token = window.authToken
+      let url = `${urls.issue.url}/${number}`
+      if (token) return fetch(url).then(res => res.json())
+      else {
+        console.log('authorized call')
+        return fetch(url, {headers: {'Authorization': 'token ' + token}}).then(res => res.json())
+      }
     },
     returnTop () {
       window.scrollTo(0, 0)
