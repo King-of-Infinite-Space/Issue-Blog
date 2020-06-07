@@ -21,12 +21,14 @@ for (let k in urls) {
 
 const scopeKeys = ['issue', 'comment', 'milestones', 'msPost']
 
+/*
 if (authToken) {
   // 如果做了授权，则将其加到请求参数里去
   scopeKeys.forEach(k => {
     urls[k].query({ access_token: authToken })
   })
 }
+*/
 
 export {
   urls
