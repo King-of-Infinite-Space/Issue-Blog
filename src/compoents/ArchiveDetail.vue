@@ -83,7 +83,7 @@ export default {
   }
   #archive-container {
     height: 100%;
-    width: 75%;
+    width: 700px;
   }
   #ar-list {
     height: 100%;
