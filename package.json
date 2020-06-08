@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@vssue/api-github-v3": "^1.0.0",
-    "@vssue/api-github-v4": "^1.0.0",
     "marked": "^0.6.2",
     "vssue": "^1.0.2",
     "vue": "^2.5.2"
