@@ -398,7 +398,7 @@ export default {
 .vssue {
   padding: 13px
 }
-/* hack vssue
+
 .vssue-pagination-per-page {
   display: none;
 }
@@ -411,12 +411,11 @@ export default {
 .vssue-new-comment {
   display: none;
 }
-
-// login doesn't work, hide the element
-
+/*
+login doesn't work, hide the element
+*/
 .vssue-comments > .vssue-pagination {
   display: none;
 }
-*/
 
 </style>
