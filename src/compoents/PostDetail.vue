@@ -55,7 +55,7 @@ import marked from 'marked'
 import { urls } from '../config'
 
 import { VssueComponent } from 'vssue'
-import GithubV3 from '@vssue/api-github-v3'
+import GithubV4 from '@vssue/api-github-v4'
 import 'vssue/dist/vssue.css'
 
 export default {
@@ -67,12 +67,12 @@ export default {
       loading: false,
       commentURL: urls.newComment.replace({ number: this.post.number }),
       vssueOptions: {
-        api: GithubV3,
+        api: GithubV4,
         owner: window.username,
         repo: window.reponame,
         clientId: '95b4afb29a7a4e06dde9',
         clientSecret: '5c9142fc80525bf8396eeaa0487fd919d75ef0aa',
-        perPage: 100,
+        perPage: 50,
       }
     }
   },
@@ -127,14 +127,6 @@ export default {
     this.oldTitle = document.title
     document.title = this.post.title
     // this.loadComments()
-
-    let styles = document.styleSheets
-    let theStyle = styles[styles.length - 1]
-    if (this.reverse) {
-      theStyle.insertRule('.vssue-comments > span {flex-direction: column-reverse}', theStyle.cssRules.length)
-    } else {
-      theStyle.insertRule('.vssue-comments > span { flex-direction: column}', theStyle.cssRules.length)
-    }
   },
   destroyed () {
     history.pushState({}, '', `/#/`)
@@ -399,23 +391,11 @@ export default {
   padding: 13px
 }
 
-.vssue-pagination-per-page {
-  display: none;
-}
-
-.vssue-comments > span {
-  display: flex;
-  flex-direction: column;
-}
-
 .vssue-new-comment {
   display: none;
 }
 /*
 login doesn't work, hide the element
 */
-.vssue-comments > .vssue-pagination {
-  display: none;
-}
 
 </style>
