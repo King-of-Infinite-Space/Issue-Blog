@@ -223,7 +223,7 @@ export default {
       // 加载指定post
       let token = window.authToken
       let url = `${urls.issue.url}/${number}`
-      if (token) return fetch(url).then(res => res.json())
+      if (!token) return fetch(url).then(res => res.json())
       else {
         console.log('authorized call')
         return fetch(url, {headers: {'Authorization': 'token ' + token}}).then(res => res.json())
