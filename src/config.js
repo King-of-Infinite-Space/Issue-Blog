@@ -3,7 +3,7 @@
  */
 import { URLWrapper } from './utils'
 
-const { username, reponame, clientID, clientSecret, authToken } = window
+const { username, reponame, clientID, clientSecret } = window // authToken
 const hostname = 'https://api.github.com'
 const rootPath = `${hostname}/repos/${username}/${reponame}/`
 let urls = {
@@ -18,10 +18,9 @@ let urls = {
 for (let k in urls) {
   urls[k] = new URLWrapper(urls[k])
 }
-
+/*
 const scopeKeys = ['issue', 'comment', 'milestones', 'msPost']
 
-/*
 if (authToken) {
   // 如果做了授权，则将其加到请求参数里去
   scopeKeys.forEach(k => {
