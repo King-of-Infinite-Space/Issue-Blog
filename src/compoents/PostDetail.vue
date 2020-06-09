@@ -55,7 +55,7 @@ import marked from 'marked'
 import { urls } from '../config'
 
 import { VssueComponent } from 'vssue'
-import GithubV4 from '@vssue/api-github-v4'
+import GithubV3 from '@vssue/api-github-v3'
 import 'vssue/dist/vssue.css'
 
 export default {
@@ -67,11 +67,11 @@ export default {
       loading: false,
       commentURL: urls.newComment.replace({ number: this.post.number }),
       vssueOptions: {
-        api: GithubV4,
+        api: GithubV3,
         owner: window.username,
         repo: window.reponame,
-        clientId: '95b4afb29a7a4e06dde9',
-        clientSecret: '5c9142fc80525bf8396eeaa0487fd919d75ef0aa',
+        clientId: '6f6e1a67c98186406aed',
+        clientSecret: '3454ad6273055076753dabf35e7e36361b6b1ea8',
         perPage: 50,
       }
     }
@@ -123,13 +123,13 @@ export default {
     }
   },
   created () {
-    history.pushState({}, '', `/#/post/${this.post.number}`)
+    history.pushState({}, '', `#/post/${this.post.number}`)
     this.oldTitle = document.title
     document.title = this.post.title
     // this.loadComments()
   },
   destroyed () {
-    history.pushState({}, '', `/#/`)
+    history.pushState({}, '', `#/`)
     document.title = this.oldTitle
   },
   components: {
